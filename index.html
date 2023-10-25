@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        .kanban-board {
+            display: flex;
+        }
+        .column {
+            flex: 1;
+            margin: 10px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            background-color: #f9f9f9;
+        }
+        .card {
+            margin: 10px;
+            padding: 10px;
+            border: 1px solid #333;
+            background-color: #fff;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div class="kanban-board">
+        <div class="column" id="todo" ondrop="drop(event)" ondragover="allowDrop(event)">
+        </div>
+        <div class="column" id="in-progress" ondrop="drop(event)" ondragover="allowDrop(event)">
+        </div>
+        <div class="column" id="done" ondrop="drop(event)" ondragover="allowDrop(event)">
+        </div>
+    </div>
+
+    <script>
+        function allowDrop(event) {
+            event.preventDefault();
+        }
+
+        function drag(event) {
+            event.dataTransfer.setData("text", event.target.id);
+        }
+
+        function drop(event) {
+            event.preventDefault();
+            var data = event.dataTransfer.getData("text");
+            event.target.appendChild(document.getElementById(data));
+        }
+
+        // Adicione cartões ao painel
+        var todoColumn = document.getElementById("todo");
+        var card1 = document.createElement("div");
+        card1.className = "card";
+        card1.draggable = true;
+        card1.id = "card1";
+        card1.textContent = "Task 1";
+        card1.ondragstart = function(event) {
+            drag(event);
+        };
+        todoColumn.appendChild(card1);
+
+        var inProgressColumn = document.getElementById("in-progress");
+        var card2 = document.createElement("div");
+        card2.className = "card";
+        card2.draggable = true;
+        card2.id = "card2";
+        card2.textContent = "Task 2";
+        card2.ondragstart = function(event) {
+            drag(event);
+        };
+        inProgressColumn.appendChild(card2);
+    </script>
+</body>
+</html>
