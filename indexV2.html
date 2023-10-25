@@ -42,34 +42,93 @@
 </head>
 <body>
     <div class="kanban-board">
-        <div class="column" id="c1" ondrop="drop(event, 'c1')" ondragover="allowDrop(event)">
+        <div class="column" id="kanbanC1" ondrop="drop(event, 'kanbanC1')" ondragover="allowDrop(event)">
             <h2 class="column-title">
-                <input type="text" id="titleC1" value="c1" oninput="changeTitle('titleC1')">
+                <input type="text" id="titleC1" value="kanbanC1" oninput="changeTitle('titleC1')">
             </h2>
         </div>
-        <div class="column" id="c2" ondrop="drop(event, 'c2')" ondragover="allowDrop(event)">
-            <h2 class="column-title">
-                <input type="text" id "titleC2" value="c2" oninput="changeTitle('titleC2')">
+        <div class="column" id="kanbanC2" ondrop="drop(event, 'kanbanC2')" ondragover="allowDrop(event)">
+            <h2 class "column-title">
+                <input type="text" id="titleC2" value="kanbanC2" oninput="changeTitle('titleC2')">
             </h2>
         </div>
-        <div class="column" id="c3" ondrop="drop(event, 'c3')" ondragover="allowDrop(event)">
-            <h2 class="column-title">
-                <input type="text" id="titleC3" value="c3" oninput="changeTitle('titleC3')">
+        <div class="column" id="kanbanC3" ondrop="drop(event, 'kanbanC3')" ondragover="allowDrop(event)">
+            <h2 class "column-title">
+                <input type="text" id="titleC3" value="kanbanC3" oninput="changeTitle('titleC3')">
             </h2>
         </div>
-        <div class="column" id="c4" ondrop="drop(event, 'c4')" ondragover="allowDrop(event)">
+        <div class="column" id="kanbanC4" ondrop="drop(event, 'kanbanC4')" ondragover="allowDrop(event)">
             <h2 class="column-title">
-                <input type="text" id="titleC4" value="c4" oninput="changeTitle('titleC4')">
+                <input type="text" id="titleC4" value="kanbanC4" oninput="changeTitle('titleC4')">
             </h2>
         </div>
-        <div class="column" id="c5" ondrop="drop(event, 'c5')" ondragover="allowDrop(event)">
+        <div class="column" id="kanbanC5" ondrop="drop(event, 'kanbanC5')" ondragover="allowDrop(event)">
             <h2 class="column-title">
-                <input type="text" id="titleC5" value="c5" oninput="changeTitle('titleC5')">
+                <input type="text" id="titleC5" value="kanbanC5" oninput="changeTitle('titleC5')">
             </h2>
         </div>
     </div>
 
     <script>
+        // Função para verificar e criar as colunas no localStorage
+        function verificarColunasNoLocalStorage() {
+            for (var i = 1; i <= 5; i++) {
+                var columnId = "kanbanC" + i;
+                var columnData = localStorage.getItem(columnId);
+                var titleColum = "titleC" + i;
+
+                if (!columnData) {
+                    // Se a coluna não existe no localStorage, crie-a com valores padrão
+                    var columnName = columnId;
+                    var message = {
+                        idImagem: "imagem123",
+                        idMensagem: "mensagem456"
+                    };
+                    var cards = [];
+					
+
+                    var columnData = {
+                        nome: columnName, // Adicione o nome da coluna aqui
+                        mensagem: message,
+                        cartoes: cards
+                    };
+
+                    // Armazene a nova coluna no localStorage
+                    localStorage.setItem(columnId, JSON.stringify(columnData));
+                } 
+                    // Apenas se a coluna existe, atribua o valor do nome
+                 document.getElementById(titleColum).value = JSON.parse(columnData).nome;
+				 
+				
+				  const colum = document.getElementById(columnId);
+				  
+					var cartoes = JSON.parse(columnData).cartoes;
+						for (var j = 0; j < cartoes.length; j++) {
+							var card = cartoes[j];
+							colum.appendChild(createCard(
+								columnId + "card" + (j + 1),
+								card.foto,
+								card.nome,
+								card.telefone,
+								card.descricao,
+								card.status,
+								card.dataEntrada,
+								card.dataEntradaC1,
+								card.dataEntradaC2,
+								card.dataEntradaC3,
+								card.dataEntradaC4,
+								card.dataEntradaC5,
+								card.dataFinalizacao
+							));
+						}
+
+                
+            }
+        }
+
+        // Chame a função para verificar e criar as colunas no localStorage na carga inicial da página
+        verificarColunasNoLocalStorage();
+
         function allowDrop(event) {
             event.preventDefault();
         }
@@ -84,28 +143,70 @@
             var target = document.getElementById(targetColumn);
             if (target.classList.contains("column")) {
                 target.appendChild(document.getElementById(data));
+
+                // Atualizar o localStorage com as informações da coluna
+                updateColumnStorage(targetColumn,data);
             }
         }
 
         function changeTitle(titleId) {
             var titleInput = document.getElementById(titleId);
-            var columnId = titleId.replace("title", "");
+            var columnId = titleId.replace("title", "kanban");
             var newTitle = titleInput.value;
 
-            // Atualize o título no localStorage
-            localStorage.setItem("kanban" + columnId, newTitle);
+            // Recupere os dados atuais da coluna no localStorage
+            var columnData = localStorage.getItem(columnId);
 
-            // Atualize o título visível
-            document.querySelector("#" + columnId + " .column-title").textContent = newTitle;
+            if (columnData) {
+                // Parse dos dados existentes
+                columnData = JSON.parse(columnData);
+
+                // Atualize apenas o nome
+                columnData.nome = newTitle;
+
+                // Guarde os dados atualizados novamente no localStorage
+                localStorage.setItem(columnId, JSON.stringify(columnData));
+            }
         }
 
-        // Recupere os títulos do localStorage e atualize os campos de entrada e os títulos visíveis
+  
+  
+  
+  
+  function updateColumnStorage(colunaAtual, columnAntigo) {
+	
+	columnAntigo = columnAntigo.slice(0, 8);
+	console.log("Esta puxando aqui: Coluna atual: " + colunaAtual + " | Coluna Antiga: " + columnAntigo);
+	
+	
+	
+  
+}
+
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+        // Recuperar informações do localStorage para preencher o kanban
         for (var i = 1; i <= 5; i++) {
-            var columnId = "c" + i;
-            var title = localStorage.getItem("kanban" + columnId);
-            if (title) {
-                document.getElementById("title" + columnId).value = title;
-                document.querySelector("#" + columnId + " .column-title").textContent = title;
+            var columnId = "kanbanC" + i;
+            var columnData = localStorage.getItem(columnId);
+            if (columnData) {
+                columnData = JSON.parse(columnData);
+                document.getElementById("title" + columnId).value = columnData.nome;
+                // Você pode preencher a mensagem automática e os cartões com os dados armazenados.
             }
         }
 
@@ -123,24 +224,19 @@
             var cardContent = document.createElement("div");
             cardContent.className = "card-content";
             cardContent.innerHTML = `
-				<table style="width:100%">
-					<tr>
-						<td>
-							<img src="${foto}" style="width: 45px; height: 45px; border-radius: 50%;">
-
-						</td>
-						<td>
-							<span>${nome}</span></br>
-							<span>${telefone}</span></br>
-							<span>🤖💬: </span></br>
-							<span>⏰: </span>
-						</td>
-					<tr>
-					
-				
-				</table>
-               
-               
+                <table style="width:100%">
+                    <tr>
+                        <td>
+                            <img src="${foto}" style="width: 45px; height: 45px; border-radius: 50%;">
+                        </td>
+                        <td>
+                            <span>${nome}</span></br>
+                            <span>${telefone}</span></br>
+                            <span>🤖💬: ${descricao}</span></br>
+                            <span>⏰: ${status}</span></br>
+                        </td>
+                    </tr>
+                </table>
             `;
 
             var moveButton = document.createElement("button");
@@ -156,29 +252,18 @@
             return card;
         }
 
-        var c1Column = document.getElementById("c1");
-        c1Column.appendChild(createCard("card1", "Foto 1", "Nome 1", "Telefone 1", "Descrição 1", "Em Andamento", "01/10/2023", "", "", "", "", "", ""));
-
-        var c2Column = document.getElementById("c2");
-        c2Column.appendChild(createCard("card2", "Foto 2", "Nome 2", "Telefone 2", "Descrição 2", "Concluído", "02/10/2023", "02/10/2023", "", "", "", "", ""));
-
-        var c3Column = document.getElementById("c3");
-        c3Column.appendChild(createCard("card3", "Foto 3", "Nome 3", "Telefone 3", "Descrição 3", "Em Andamento", "03/10/2023", "03/10/2023", "03/10/2023", "", "", "", ""));
-
-        var c4Column = document.getElementById("c4");
-        c4Column.appendChild(createCard("card4", "Foto 4", "Nome 4", "Telefone 4", "Descrição 4", "Concluído", "04/10/2023", "04/10/2023", "04/10/2023", "04/10/2023", "", ""));
-
-        var c5Column = document.getElementById("c5");
-        c5Column.appendChild(createCard("card5", "Foto 5", "Nome 5", "Telefone 5", "Descrição 5", "Em Andamento", "05/10/2023", "05/10/2023", "05/10/2023", "05/10/2023", "05/10/2023", ""));
-        
         function dropCardInNextColumn(cardId) {
             var currentColumnId = document.getElementById(cardId).parentElement.id;
-            var currentIndex = parseInt(currentColumnId.replace("c", ""));
-            var nextColumnIndex = currentIndex % 5 + 1;
-            var nextColumnId = "c" + nextColumnIndex;
+            var currentIndex = parseInt(currentColumnId.replace("kanbanC", ""));
+            var nextColumnIndex = (currentIndex % 5) + 1;
+            var nextColumnId = "kanbanC" + nextColumnIndex;
             var target = document.getElementById(nextColumnId);
             if (target.classList.contains("column")) {
                 target.appendChild(document.getElementById(cardId));
+
+                // Atualizar o localStorage com as informações da coluna anterior
+                updateColumnStorage(nextColumnId,currentColumnId);
+
             }
         }
     </script>
