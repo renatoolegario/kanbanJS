@@ -23,11 +23,20 @@
 </head>
 <body>
     <div class="kanban-board">
-        <div class="column" id="todo" ondrop="drop(event)" ondragover="allowDrop(event)">
+        <div class="column" id="c1" ondrop="drop(event)" ondragover="allowDrop(event)">
+            <h2>c1</h2>
         </div>
-        <div class="column" id="in-progress" ondrop="drop(event)" ondragover="allowDrop(event)">
+        <div class="column" id="c2" ondrop="drop(event)" ondragover="allowDrop(event)">
+            <h2>c2</h2>
         </div>
-        <div class="column" id="done" ondrop="drop(event)" ondragover="allowDrop(event)">
+        <div class="column" id="c3" ondrop="drop(event)" ondragover="allowDrop(event)">
+            <h2>c3</h2>
+        </div>
+        <div class="column" id="c4" ondrop="drop(event)" ondragover="allowDrop(event)">
+            <h2>c4</h2>
+        </div>
+        <div class="column" id="c5" ondrop="drop(event)" ondragover="allowDrop(event)">
+            <h2>c5</h2>
         </div>
     </div>
 
@@ -47,7 +56,7 @@
         }
 
         // Adicione cartões ao painel
-        var todoColumn = document.getElementById("todo");
+        var c1Column = document.getElementById("c1");
         var card1 = document.createElement("div");
         card1.className = "card";
         card1.draggable = true;
@@ -56,9 +65,9 @@
         card1.ondragstart = function(event) {
             drag(event);
         };
-        todoColumn.appendChild(card1);
+        c1Column.appendChild(card1);
 
-        var inProgressColumn = document.getElementById("in-progress");
+        var c2Column = document.getElementById("c2");
         var card2 = document.createElement("div");
         card2.className = "card";
         card2.draggable = true;
@@ -67,7 +76,7 @@
         card2.ondragstart = function(event) {
             drag(event);
         };
-        inProgressColumn.appendChild(card2);
+        c2Column.appendChild(card2);
     </script>
 </body>
 </html>
