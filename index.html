@@ -52,7 +52,9 @@
         function drop(event) {
             event.preventDefault();
             var data = event.dataTransfer.getData("text");
-            event.target.appendChild(document.getElementById(data));
+            if (event.target.classList.contains("column")) {
+                event.target.appendChild(document.getElementById(data));
+            }
         }
 
         // Adicione cartões ao painel
