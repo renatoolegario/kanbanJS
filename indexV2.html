@@ -41,11 +41,44 @@
     </style>
 </head>
 <body>
+
+	
+	<div id="addContatosKanban" style="position: absolute; border: 1px solid black; width: 20%; margin-left: 40%; border-radius: 10%; z-index: 999; background-color: rgba(255, 255, 255);margin-top:5%;">
+		<div style="margin: 5%;">
+			<span id="tituloAddContato"></span>
+			<input type="hidden" id="nColunaKanban" value="">
+			<span>Telefone de contato</span><br>
+			<input type="text" id="telefoneAdd" style="width: 90%;"><br>
+			<span>Nome do contato</span>
+			<input type="text" id="nomeAdd" style="width: 90%;"><br>
+			<span>Descrição do atendimento</span>
+			<textarea id="descricaoAdd" style="width: 90%; height: 150px;"></textarea><br>
+			<button onclick="addContKanban();">Adicionar</button>
+			<button onclick="fecharAddC();">Fechar</button>
+		</div>
+	</div>
+
+
+
     <div class="kanban-board">
         <div class="column" id="kanbanC1" ondrop="drop(event, 'kanbanC1')" ondragover="allowDrop(event)">
-            <h2 class="column-title">
-                <input type="text" id="titleC1" value="kanbanC1" oninput="changeTitle('titleC1')">
-            </h2>
+		<table>
+			<tr>
+				<td>
+					 <h2 class="column-title">
+						<input type="text" id="titleC1" value="kanbanC1" oninput="changeTitle('titleC1')">
+					</h2>
+				
+				</td>
+				
+				<td>					
+					<button  onclick="addC(1);"> + </button>					
+				</td>
+			
+			</tr>
+		
+		</table>
+           
         </div>
         <div class="column" id="kanbanC2" ondrop="drop(event, 'kanbanC2')" ondragover="allowDrop(event)">
             <h2 class "column-title">
@@ -70,9 +103,70 @@
     </div>
 
     <script>
+		
+		function addContKanban(){
+			
+				var nColuna = document.getElementById('nColunaKanban').value;
+				var telefone = document.getElementById('telefoneAdd').value;
+				var nome = document.getElementById('nomeAdd').value;
+				var descricao = document.getElementById('descricaoAdd').value;
+				var timestampAtual = new Date().getTime();
+				var timestampAtualEmSegundos = Math.floor(timestampAtual / 1000);
+				
+				var cardInfo = [
+					id = timestampAtualEmSegundos, // Nome da coluna + card1
+					foto = "", // card.foto (variável vazia)
+					nome = nome, // card.nome
+					telefone = telefone, // card.telefone
+					descricao = descricao, // card.descricao
+					status = "", // card.status (variável vazia)
+					entradaC1 = "", 
+					entradaC2 = "", 
+					entradaC3 = "", 
+					entradaC4 = "", 
+					entradaC5 = ""					
+				];
+				
+				var kanban = localStore.getItem
+					
+			
+			fecharAddC();
+		}
+	
+		function fecharAddC(){
+		
+			const addContatosKanban = document.getElementById('addContatosKanban');
+				addContatosKanban.style.display = "none";
+				addContatosKanban.style.zIndex = "-10";
+				
+				document.getElementById('nColunaKanban').value = "";
+				document.getElementById('telefoneAdd').value = "";
+				document.getElementById('nomeAdd').value = "";
+				document.getElementById('descricaoAdd').value = "";
+		
+		}
+		
+		function addC(n){
+			
+			let kanban = 'kanbanC' + n;
+			document.getElementById('nColunaKanban').value = kanban;
+			kanban = localStorage.getItem(kanban)
+			const columnData = JSON.parse(kanban);
+			console.log(columnData.nome);
+			
+			
+			const addContatosKanban = document.getElementById('addContatosKanban');
+				addContatosKanban.style.display = "";
+				addContatosKanban.style.zIndex = "999";
+				
+				
+		
+		}
+	
         // Função para verificar e criar as colunas no localStorage
         function verificarColunasNoLocalStorage() {
-            for (var i = 1; i <= 5; i++) {
+		
+			for(i= 1; i <= 5; i++){
                 var columnId = "kanbanC" + i;
                 var columnData = localStorage.getItem(columnId);
                 var titleColum = "titleC" + i;
@@ -96,34 +190,7 @@
                     // Armazene a nova coluna no localStorage
                     localStorage.setItem(columnId, JSON.stringify(columnData));
                 } 
-                    // Apenas se a coluna existe, atribua o valor do nome
-                 document.getElementById(titleColum).value = JSON.parse(columnData).nome;
-				 
-				
-				  const colum = document.getElementById(columnId);
-				  
-					var cartoes = JSON.parse(columnData).cartoes;
-						for (var j = 0; j < cartoes.length; j++) {
-							var card = cartoes[j];
-							colum.appendChild(createCard(
-								columnId + "card" + (j + 1),
-								card.foto,
-								card.nome,
-								card.telefone,
-								card.descricao,
-								card.status,
-								card.dataEntrada,
-								card.dataEntradaC1,
-								card.dataEntradaC2,
-								card.dataEntradaC3,
-								card.dataEntradaC4,
-								card.dataEntradaC5,
-								card.dataFinalizacao
-							));
-						}
-
-                
-            }
+            }      
         }
 
         // Chame a função para verificar e criar as colunas no localStorage na carga inicial da página
@@ -145,7 +212,9 @@
                 target.appendChild(document.getElementById(data));
 
                 // Atualizar o localStorage com as informações da coluna
-                updateColumnStorage(targetColumn,data);
+				let columnAntigo = data.slice(0, 8);
+				let cardId = data.slice(8,100);
+                updateColumnStorage(targetColumn,columnAntigo,cardId);
             }
         }
 
@@ -173,29 +242,23 @@
   
   
   
-  function updateColumnStorage(colunaAtual, columnAntigo) {
+  function updateColumnStorage(colunaAtual, columnAntigo, cardId) {
 	
-	columnAntigo = columnAntigo.slice(0, 8);
-	console.log("Esta puxando aqui: Coluna atual: " + colunaAtual + " | Coluna Antiga: " + columnAntigo);
+	console.log("Esta puxando aqui: Coluna atual: " + colunaAtual + " | Coluna Antiga: " + columnAntigo + " | ID : " + cardId);
+
+	// Entrar dentro do ColumAntigo e capturar todo o array do cardId.
+	
+	let dadosCardId = localStorage.getItem(columnAntigo);
+	
+	console.log(dadosCardId);
+
+	// Adicionar este cardId no colunaAtual e remover do antigo Colum Antigo
 	
 	
 	
   
 }
 
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
   
   
   
@@ -262,7 +325,10 @@
                 target.appendChild(document.getElementById(cardId));
 
                 // Atualizar o localStorage com as informações da coluna anterior
-                updateColumnStorage(nextColumnId,currentColumnId);
+				
+				let columnAntigo = cardId.slice(0, 8);
+				cardId = cardId.slice(8,100);
+                updateColumnStorage(nextColumnId,columnAntigo,cardId);
 
             }
         }
