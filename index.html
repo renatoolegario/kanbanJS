@@ -1,84 +1,128 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <style>
-        .kanban-board {
-            display: flex;
-        }
-        .column {
-            flex: 1;
-            margin: 10px;
-            padding: 10px;
-            border: 1px solid #ccc;
-            background-color: #f9f9f9;
-        }
-        .card {
-            margin: 10px;
-            padding: 10px;
-            border: 1px solid #333;
-            background-color: #fff;
-            cursor: pointer;
-        }
-    </style>
+
+	<link rel="stylesheet" type="text/css" href="assets/kanban.css">
+    
 </head>
 <body>
-    <div class="kanban-board">
-        <div class="column" id="c1" ondrop="drop(event)" ondragover="allowDrop(event)">
-            <h2>c1</h2>
-        </div>
-        <div class="column" id="c2" ondrop="drop(event)" ondragover="allowDrop(event)">
-            <h2>c2</h2>
-        </div>
-        <div class="column" id="c3" ondrop="drop(event)" ondragover="allowDrop(event)">
-            <h2>c3</h2>
-        </div>
-        <div class="column" id="c4" ondrop="drop(event)" ondragover="allowDrop(event)">
-            <h2>c4</h2>
-        </div>
-        <div class="column" id="c5" ondrop="drop(event)" ondragover="allowDrop(event)">
-            <h2>c5</h2>
-        </div>
-    </div>
 
-    <script>
-        function allowDrop(event) {
-            event.preventDefault();
-        }
+	<div class="fundoKanban">
+		<div id="addContatosKanban" style="display:none;position: absolute; border: 1px solid black; width: 20%; margin-left: 40%; border-radius: 10%; z-index: 999; background-color: rgba(255, 255, 255);margin-top:5%;">
+			<div style="margin: 5%;">
+				<span id="tituloAddContato"></span></br></br>
+				<input type="hidden" id="nColunaKanban" value="">
+				<span>Telefone de contato</span><br>
+				<input type="text" id="telefoneAdd" style="width: 90%;"><br>
+				<span>Nome do contato</span>
+				<input type="text" id="nomeAdd" style="width: 90%;"><br>
+				<span>Descrição do atendimento</span>
+				<textarea id="descricaoAdd" style="width: 90%; height: 150px;"></textarea><br>
+				<button onclick="addContKanban();">Adicionar</button>
+				<button onclick="fecharAddC();">Fechar</button>
+			</div>
+		</div>
 
-        function drag(event) {
-            event.dataTransfer.setData("text", event.target.id);
-        }
 
-        function drop(event) {
-            event.preventDefault();
-            var data = event.dataTransfer.getData("text");
-            if (event.target.classList.contains("column")) {
-                event.target.appendChild(document.getElementById(data));
-            }
-        }
 
-        // Adicione cartões ao painel
-        var c1Column = document.getElementById("c1");
-        var card1 = document.createElement("div");
-        card1.className = "card";
-        card1.draggable = true;
-        card1.id = "card1";
-        card1.textContent = "Task 1";
-        card1.ondragstart = function(event) {
-            drag(event);
-        };
-        c1Column.appendChild(card1);
+		<div class="kanban-board">
+			<div class="column" id="kanbanC1" ondrop="drop(event, 'kanbanC1')" ondragover="allowDrop(event)">
+			<table>
+				<tr>
+					<td>
+						 <h2 class="column-title">
+							<input type="text" id="titleC1" value="kanbanC1" oninput="changeTitle('titleC1')" class="titulosKanban">
+						</h2>
+					
+					</td>
+					
+					<td>					
+						<button  onclick="addC(1);"class="botaoAdd"> + </button>					
+					</td>
+				
+				</tr>
+			
+			</table>
+			   
+			</div>
+			<div class="column" id="kanbanC2" ondrop="drop(event, 'kanbanC2')" ondragover="allowDrop(event)">
+			   <table>
+				<tr>
+					<td>
+						 <h2 class="column-title">
+							<input type="text" id="titleC2" value="kanbanC2" oninput="changeTitle('titleC2')" class="titulosKanban">
+						</h2>
+					
+					</td>
+					
+					<td>					
+						<button  onclick="addC(2);" class="botaoAdd"> + </button>					
+					</td>
+				
+				</tr>
+			
+			</table>
+			</div>
+			<div class="column" id="kanbanC3" ondrop="drop(event, 'kanbanC3')" ondragover="allowDrop(event)">
+			   <table>
+				<tr>
+					<td>
+						 <h2 class="column-title">
+							<input type="text" id="titleC3" value="kanbanC3" oninput="changeTitle('titleC3')" class="titulosKanban">
+						</h2>
+					
+					</td>
+					
+					<td>					
+						<button  onclick="addC(3);" class="botaoAdd"> + </button>					
+					</td>
+				
+				</tr>
+			
+			</table>
+			</div>
+			<div class="column" id="kanbanC4" ondrop="drop(event, 'kanbanC4')" ondragover="allowDrop(event)">
+				<table>
+				<tr>
+					<td>
+						 <h2 class="column-title">
+							<input type="text" id="titleC4" value="kanbanC4" oninput="changeTitle('titleC4')" class="titulosKanban">
+						</h2>
+					
+					</td>
+					
+					<td>					
+						<button  onclick="addC(4);"class="botaoAdd"> + </button>					
+					</td>
+				
+				</tr>
+			
+			</table>
+			</div>
+			<div class="column" id="kanbanC5" ondrop="drop(event, 'kanbanC5')" ondragover="allowDrop(event)">
+			   <table>
+				<tr>
+					<td>
+						 <h2 class="column-title">
+							<input type="text" id="titleC5" value="kanbanC5" oninput="changeTitle('titleC5')" class="titulosKanban">
+						</h2>
+					
+					</td>
+					
+					<td>					
+						<button  onclick="addC(5);"class="botaoAdd"> + </button>					
+					</td>
+				
+				</tr>
+			
+			</table>
+			</div>
+		</div>
 
-        var c2Column = document.getElementById("c2");
-        var card2 = document.createElement("div");
-        card2.className = "card";
-        card2.draggable = true;
-        card2.id = "card2";
-        card2.textContent = "Task 2";
-        card2.ondragstart = function(event) {
-            drag(event);
-        };
-        c2Column.appendChild(card2);
-    </script>
+
+	</div>
+	<script src="assets/kanban.js"></script>
+	
+
 </body>
 </html>
